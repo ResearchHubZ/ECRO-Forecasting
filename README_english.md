@@ -124,4 +124,4 @@ Structured event:
 }
 ```
 
-Due to the involvement of real power-system operation information, electricity market transaction records, and user-side electricity consumption statistics, the complete dataset is not publicly available for privacy protection and data security reasons. De-identified samples may be obtained by contacting the corresponding author and are limited to academic research and reproducibility studies.
+Due to the involvement of real power-system operation information, electricity market transaction records, and user-side electricity consumption statistics, the complete dataset is not publicly available for privacy protection and data security reasons. Power-system data can be obtained by contacting the corresponding author, with usage limited to academic research and replication studies.
