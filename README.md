@@ -62,57 +62,23 @@
 
 ---
 
-## 4. Text-to-Event Structuring
-
-每条有效事件被转换为结构化事件变量，主要字段如下。
-
-| Field | Description |
-|---|---|
-| `title` | Normalized event title |
-| `publish_time` | Publication time of the event |
-| `direction` | Potential impact direction on the target variable |
-| `intensity` | Potential impact intensity |
-| `duration` | Potential impact duration |
-| `factor` | Main event factor |
-| `rationale` | Causal explanation of the event impact |
-
-字段含义说明如下：
-
-- `direction` 表示事件对目标变量的可能影响方向，通常包括 `positive` 和 `negative`；
-- `intensity` 表示事件可能引发扰动的相对强度，通常包括 `high`、`medium` 和 `low`；
-- `duration` 表示事件影响的持续周期，通常包括 `short-term`、`medium-term` 和 `long-term`；
-- `factor` 表示事件影响目标变量的主要因素，例如 `policy`、`weather`、`holiday`、`economy`、`market` 等；
-- `rationale` 用于说明事件影响目标变量的因果路径。
-
----
-
-## 5. Event Text Processing Pipeline
+**Event Text Processing Pipeline**
 
 事件文本处理流程包括以下步骤。
 
-**1. Event collection**
+- **Event collection：** 从公开新闻、政府公告和权威媒体报道中收集可能影响电力需求或电力价格的事件文本。文本来源包括人民网、山东省人民政府、中国山东网等公开渠道。
 
-- 从公开新闻、政府公告和权威媒体报道中收集可能影响电力需求或电力价格的事件文本。文本来源包括人民网、山东省人民政府、中国山东网等公开渠道。
+-**Task relevance filtering：** 根据预测目标、发布时间、区域范围和事件内容筛除明显无关文本。仅保留可能通过用户行为、市场状态、气象条件、政策调整或经济活动影响目标序列的文本。
 
-**2. Task relevance filtering**
+-**Event clustering and deduplication：** 开放文本中常存在重复报道、转载新闻和相似公告。为避免同一事件被重复输入模型，我们对候选文本进行聚类和去重，将多条相似文本合并为一个候选事件，并选择信息较完整、表达较清晰的文本作为代表文本。
 
-- 根据预测目标、发布时间、区域范围和事件内容筛除明显无关文本。仅保留可能通过用户行为、市场状态、气象条件、政策调整或经济活动影响目标序列的文本。
+-**Semantic structuring：** ：对候选事件进行语义结构化，提取影响方向、影响强度、影响周期、影响因素和因果解释等字段。该步骤的目标不是抽取孤立关键词，而是将开放文本转化为可用于事件响应建模的结构化语义条件。
 
-**3. Event clustering and deduplication**
-
-- 开放文本中常存在重复报道、转载新闻和相似公告。为避免同一事件被重复输入模型，我们对候选文本进行聚类和去重，将多条相似文本合并为一个候选事件，并选择信息较完整、表达较清晰的文本作为代表文本。
-
-**4. Semantic structuring**
-
-- 对候选事件进行语义结构化，提取影响方向、影响强度、影响周期、影响因素和因果解释等字段。该步骤的目标不是抽取孤立关键词，而是将开放文本转化为可用于事件响应建模的结构化语义条件。
-
-**5. Temporal alignment**
-
-- 根据事件发布时间，将结构化事件对齐到对应预测起点之前。模型只允许使用预测时刻之前已经公开的事件信息，从而避免未来信息泄露。
+-**Temporal alignment** ：根据事件发布时间，将结构化事件对齐到对应预测起点之前。模型只允许使用预测时刻之前已经公开的事件信息，从而避免未来信息泄露。
 
 ---
 
-## 6. Examples of Event Structuring
+** Examples of Event Structuring **
 
 以下示例用于说明原始事件文本如何被转换为结构化事件变量。示例均为匿名化展示，仅用于说明处理逻辑，不包含完整原始数据。
 
