@@ -64,43 +64,47 @@
 
 ---
 
-**Event Text Processing Pipeline**
+**Examples of Event Structuring**
 
-事件文本处理流程包括以下步骤。
-
-- **Event collection：** 从公开新闻、政府公告和权威媒体报道中收集可能影响电力需求或电力价格的事件文本。文本来源包括人民网、山东省人民政府、中国山东网等公开渠道。
-
-- **Task relevance filtering：** 根据预测目标、发布时间、区域范围和事件内容筛除明显无关文本。仅保留可能通过用户行为、市场状态、气象条件、政策调整或经济活动影响目标序列的文本。
-
-- **Event clustering and deduplication：** 开放文本中常存在重复报道、转载新闻和相似公告。为避免同一事件被重复输入模型，我们对候选文本进行聚类和去重，将多条相似文本合并为一个候选事件，并选择信息较完整、表达较清晰的文本作为代表文本。
-
-- **Semantic structuring：** ：对候选事件进行语义结构化，提取影响方向、影响强度、影响周期、影响因素和因果解释等字段。该步骤的目标不是抽取孤立关键词，而是将开放文本转化为可用于事件响应建模的结构化语义条件。
-
-- **Temporal alignment** ：根据事件发布时间，将结构化事件对齐到对应预测起点之前。模型只允许使用预测时刻之前已经公开的事件信息，从而避免未来信息泄露。
-
----
-
-** Examples of Event Structuring **
-
-以下示例用于说明原始事件文本如何被转换为结构化事件变量。示例均为匿名化展示，仅用于说明处理逻辑，不包含完整原始数据。
+以下示例用于说明原始事件文本如何被转换为结构化事件变量。示例内容基于公开新闻或公告进行简化整理，仅用于展示文本到事件映射逻辑。
 
 **Example 1: Extreme Weather Event for Residential Electricity Consumption**
 
 Raw text:
 
-> 某省气象部门发布高温预警，预计未来多地将持续出现高温天气，居民制冷需求可能明显增加。
+> 山东省气象台于 2024 年 6 月 7 日 11 时 20 分发布高温橙色预警。受大陆暖高压脊影响，预计 6 月 9 日至 14 日，山东省内陆地区将持续出现 37℃ 以上高温天气，部分地区最高气温可达 40℃ 以上。此次高温天气持续时间长、范围广、温度高，对城乡用电等可能产生不利影响，请加强防范。
 
 Structured event:
 
 ```json
 {
-  "title": "某省多地发布持续高温预警",
-  "publish_time": "2024-07-10 09:00:00",
+  "title": "山东省发布高温橙色预警",
+  "publish_time": "2024-06-07 11:20:00",
   "direction": "positive",
   "intensity": "high",
   "duration": "short-term",
   "factor": "weather",
-  "rationale": "持续高温可能提升居民空调用电需求，从而增加短期居民用电量。"
+  "rationale": "持续高温会提升居民制冷需求，可能增加短期居民用电量，并对城乡用电形成阶段性压力。"
+}
+```
+
+**Example 2: Electricity Spot Market Event for Real-time Electricity Price**
+
+Raw text:
+
+> 2024 年 6 月 17 日，国家能源局山东监管办公室会同山东省发展改革委、山东省能源局发布通知，山东电力现货市场自即日起转入正式运行。电力现货市场能够通过价格信号反映电网供需变化，并引导市场主体参与电网调节。
+
+Structured event:
+
+```json
+{
+  "title": "山东电力现货市场转入正式运行",
+  "publish_time": "2024-06-17 00:00:00",
+  "direction": "positive",
+  "intensity": "medium",
+  "duration": "long-term",
+  "factor": "market",
+  "rationale": "电力现货市场正式运行强化了实时价格对供需状态、负荷波动和市场交易变化的反映，在供需偏紧或高负荷时段可能推高实时电价并增强价格波动。"
 }
 ```
 
